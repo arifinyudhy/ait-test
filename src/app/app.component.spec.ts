@@ -1,69 +1,74 @@
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatCardModule } from '@angular/material/card';
 import { FunctionExpr } from '@angular/compiler';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('AppComponent', () => {
+  let app: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
+        MatCardModule,
+        MatListModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatListModule,
       ],
       declarations: [
         AppComponent
       ],
+      schemas: [
+        CUSTOM_ELEMENTS_SCHEMA,
+      ]
     }).compileComponents();
+    fixture = TestBed.createComponent(AppComponent);
+    app = fixture.componentInstance;
   });
 
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
 
   it(`should have as title 'ait-unit-test'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
     expect(app.title).toEqual('ait-unit-test');
-  });
-
-});
-
-describe('Function Test', () => {
-  let funct: AppComponent;
-  beforeEach(() => {
-    funct = new AppComponent();
   });
   it('should add to do', () => {
     let value = 'test task';
-    funct.value = value;
-    funct.onChangeValue();
-    expect(funct.task.task).toEqual(value);
+    app.value = value;
+    app.onChangeValue();
+    expect(app.task.task).toEqual(value);
   });
   it('should add task', () => {
     let task = 'testing task';
-    funct.task.task = task;
-    funct.addToDo();
-    let index = funct.listIncompleteTask.findIndex(x => x.task == task);
+    app.task.task = task;
+    app.addToDo();
+    let index = app.listIncompleteTask.findIndex(x => x.task == task);
     expect(index).toBeGreaterThanOrEqual(0);
   });
   it('should completed task', () => {
     let id = 2;
     let task = { id: id, task: 'Create Model', complete: false };
-    funct.listIncompleteTask.push(task);
-    funct.onCompleteTask(id);
-    let index = funct.listIncompleteTask.findIndex(x => x.id == id);
-    let indexComplete = funct.listCompleteTask.findIndex(x => x.id == id);
+    app.listIncompleteTask.push(task);
+    app.onCompleteTask(id);
+    let index = app.listIncompleteTask.findIndex(x => x.id == id);
+    let indexComplete = app.listCompleteTask.findIndex(x => x.id == id);
     expect(index).toEqual(-1);
     expect(indexComplete).toEqual(0);
   });
   it('should uncompleted task', () => {
     let id = 2;
     let task = { id: id, task: 'Create Model', complete: true };
-    funct.listCompleteTask.push(task);
-    funct.onRemoveCompleteTask(id);
-    let indexA = funct.listCompleteTask.findIndex(x => x.id == id);
-    let indexB = funct.listIncompleteTask.findIndex(x => x.id == id);
+    app.listCompleteTask.push(task);
+    app.onRemoveCompleteTask(id);
+    let indexA = app.listCompleteTask.findIndex(x => x.id == id);
+    let indexB = app.listIncompleteTask.findIndex(x => x.id == id);
     expect(indexA).toEqual(-1);
     expect(indexB).toEqual(0);
   });
